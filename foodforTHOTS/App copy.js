@@ -1,53 +1,83 @@
-import { useAuth0, Auth0Provider } from 'react-native-auth0';
-import React, { useState } from 'react';
-
-import { Button, Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-
-// const LoginButton = () => {
-//   const {authorize} = useAuth0();
-
-//   const onPress = async () => {
-//     console.log("I was pressed!");
-//       try {
-
-//           await authorize();
-//       } catch (e) {
-//           console.log(e);
-//       }
-//   };
-
-//   return <Button onPress={onPress} title="Log in" />
-// }
-
+import React, { useEffect, useState } from 'react';
 import MapView from 'react-native-maps';
-// import Map from './components/Map';
+import { Platform, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
+import * as Location from 'expo-location';
 
-export default App = () => {
-
-  function onPress() {
-    console.log("TAP");
-  }
-
+export default function App() {
   const [mapRegion, setmapRegion] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  return (
 
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity styles={{ width: "100%", height: "100%" }} onPress={onPress}>
+  const [position, setPosition] = useState(null);
+  const[x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      await setLocation(Location.getCurrentPositionAsync({}));
+      console.log("Got init pos");
+    });
+  }, []);
+
+  async function onPress() {
+    console.log(location);
+    console.log(x);
+    console.log(y);
+    console.log(mapRegion);
+
+    setLocation(await Location.getCurrentPositionAsync({}));
+
+
+
+
+    setX(location.coords.longitude);
+    setY(location.coords.latitude);
+    setmapRegion({
+      latitude: y,
+      longitude: x,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+
+  }
+
+  function logPos() {
+    console.log(location);
+  }
+
+  useEffect(() => {
+    console.log("Hello");
+    console.log(position);
+    console.log(position);
+
+
+  },[]);
+
+
+
+  return (
+    <View style={styles.container}>
+        <MapView
+          style={{ alignSelf: 'stretch', height: '100%', flex: 1 }}
+          region={mapRegion}
+          onPress={onPress}
+        />
         <Text>Hello</Text>
-        <View>
-          <MapView
-            style={{ alignSelf: 'stretch', height: '100%', flex: 1 }}
-            region={mapRegion}
-          />
-        </View>
-      </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 
