@@ -74,11 +74,15 @@ export default function Map() {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText1}>Event: <Text style={styles.modalText2}>insert name</Text></Text>
+            <Text style={styles.modalText1}>Location: <Text style={styles.modalText2}>insert location</Text></Text>
+            <Text style={styles.modalText1}>Time Posted: <Text style={styles.modalText2}>insert time</Text></Text>
+            <Text style={styles.modalText1}>Food Type: <Text style={styles.modalText2}>food type</Text></Text>
+            <Text style={styles.modalText1}>Allergens: <Text style={styles.modalText2}>(vegan/vegetarian, etc)</Text></Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setShowPopup(!showPopup)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Close</Text>
             </Pressable>
           </View>
         </View>
@@ -87,9 +91,10 @@ export default function Map() {
           style={{ alignSelf: 'stretch', height: '100%', flex: 1 }}
           region={mapRegion}
           onPress={onMapPress} 
+          provider='google'
         >
           <Marker 
-          coordinate={mapRegion} title='Marker'
+          coordinate={mapRegion} title='Insert Location Name'
           onPress={() => setShowPopup(true)}
           onCalloutPress={() => setShowPopup(true)}>
           </Marker>
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
+    marginLeft: 0,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
@@ -144,8 +149,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
+  modalText1: {
+    marginLeft: 0,
+    marginBottom: 15,
+    fontSize: 25,
+    textAlign: 'left',
+    fontWeight: 'bold',
+  },
+  modalText2: {
+    marginLeft: 0,
     marginBottom: 15,
     textAlign: 'center',
+    fontWeight: 'normal',
   }
 });
