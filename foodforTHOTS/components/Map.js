@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Platform, StyleSheet, TouchableOpacity, View, Text, Modal, Pressable } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View, Text, Modal, Pressable, useAnimatedValue } from 'react-native';
 
 import * as Location from 'expo-location';
 
 import EventService from "../services/event-service";
+import moment from 'moment/moment';
 
 export default function Map(props) {
   const [mapRegion, setmapRegion] = useState({
@@ -13,6 +14,13 @@ export default function Map(props) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
+  const [curTitle, setCurTitle] = useState(null);
+  const [curLocation, setCurLocation] = useState(null);
+  const [curTime, setCurTime] = useState(null);
+  const [curAddr, setCurAddr] = useState(null);
+  const [curDesc, setCurDesc] = useState(null);
+  const [curAll, setCurAll] = useState(null)
 
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
@@ -35,7 +43,7 @@ export default function Map(props) {
 
       let pos = await Location.getCurrentPositionAsync({});
       setLocation(pos);
-      console.log("Got init pos");
+      // console.log("Got init pos");
     });
   }, [props.latch]);
 
@@ -48,23 +56,40 @@ export default function Map(props) {
 
 
   useEffect(() => {
-    console.log("Update to local events:");
-    console.log(events);
+    // console.log("Update to local events:");
+    // console.log(events);
+    // console.log(events.length);
   }, [events]);
 
   async function getStuff() {
-    console.log("Fetching Events");
+    // console.log("Fetching Events");
     tempArr = await EventService.fetchEvents();
     setEvents(tempArr);
-    console.log("Events fetched!");
-    console.log(events);
+    // console.log("Events fetched!");
+    // console.log(events);
+    // console.log(events.length);
+  }
+
+  function onMarkerPress(e) {
+    setCurTitle(e.title);
+    setCurLocation(e.location);
+    setCurTime(moment(e.time).format("dddd"));
+    setCurAddr(e.address);
+    setCurDesc(e.description);
+    setCurAll(e.allergies);
+    console.log(e);
+    
+
+
+
+    setShowPopup(true);
   }
 
   async function onMapPress() {
-    console.log(location);
-    console.log(x);
-    console.log(y);
-    console.log(mapRegion);
+     console.log(location);
+    // console.log(x);
+    // console.log(y);
+    // console.log(mapRegion);
 
     let pos = await Location.getCurrentPositionAsync({});
 
@@ -81,13 +106,8 @@ export default function Map(props) {
     }
 
 
-
   }
 
-  async function onMarkerPress(eventId) {
-    setShowPopup(true);
-    console.log(showPopup);
-  }
 
   function logPos() {
     console.log(location);
@@ -108,11 +128,11 @@ export default function Map(props) {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText1}>Event: <Text style={styles.modalText2}>insert name</Text></Text>
-            <Text style={styles.modalText1}>Location: <Text style={styles.modalText2}>insert location</Text></Text>
-            <Text style={styles.modalText1}>Time Posted: <Text style={styles.modalText2}>insert time</Text></Text>
-            <Text style={styles.modalText1}>Food Type: <Text style={styles.modalText2}>food type</Text></Text>
-            <Text style={styles.modalText1}>Allergens: <Text style={styles.modalText2}>(vegan/vegetarian, etc)</Text></Text>
+            <Text style={styles.modalText1}>Event: <Text style={styles.modalText2}>{curTitle}</Text></Text>
+            <Text style={styles.modalText1}>Location: <Text style={styles.modalText2}>{curAddr}</Text></Text>
+            <Text style={styles.modalText1}>Time Posted: <Text style={styles.modalText2}>{curTime}</Text></Text>
+            <Text style={styles.modalText1}>Description: <Text style={styles.modalText2}>{curDesc}</Text></Text>
+            <Text style={styles.modalText1}>Allergens: <Text style={styles.modalText2}>{curAll}</Text></Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setShowPopup(!showPopup)}>
@@ -130,28 +150,20 @@ export default function Map(props) {
         showsCompass="true"
       >
 
-        {/* {events.map((event) => 
-         <Marker
-         key = {event.id}
-         description={event?.description || "No Data"}
-         coordinate={{ latitude: 36.005, longitude: -78.94 }}
-         pinColor='red'
-         title={event?.title | "No Data"}
-         onPress={onMarkerPress(event?.id)}
-         onCalloutPress={onMarkerPress(event?.id)}
-         >
+        {events.map((event) =>
+          <Marker
+            key={event.title}
+            description={event?.description || "No Data"}
+            coordinate={{ latitude: event.location?.latitude || 36, longitude: event.location?.longitude || -78.93 }}
+            pinColor='red'
+            title={event?.title || "No Data"}
+            onPress={() => onMarkerPress(event)}
+            onCalloutPress={() => onMarkerPress(event)}
+          >
 
-         </Marker>
+          </Marker>
 
-        )} */}
-
-        <Marker
-          description={event?.id}
-          coordinate={{ latitude: 36.005, longitude: -78.94 }}
-          pinColor='red'
-          title={"No Data"}
-        >
-        </Marker>
+        )}
 
 
       </MapView>

@@ -38,15 +38,15 @@ class EventService {
 
 
     async createEvent(event) {
-        console.log("\n");
+        // console.log("\n");
         const collectionRef = collection(db, this.collection);
-        console.log("Got here");
+        // console.log("Got here");
         const lolol = event.toJson();
-        console.log(lolol);
+        // console.log(lolol);
 
         const docRef = await addDoc(collectionRef, lolol);
         event.id = docRef.id;
-        console.log(event.id);
+        // console.log(event.id);
 
 
 

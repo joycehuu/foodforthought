@@ -18,7 +18,7 @@ import * as Location from 'expo-location';
 export default function App() {
 
   useEffect(() => {
-    console.log("Fired");
+    // console.log("Fired");
     forceMapRender();
 
   }, []);
@@ -42,7 +42,7 @@ export default function App() {
   const [newDescription, setNewDescription] = useState(null);
 
   function makeEventPressed() {
-    console.log("props worked");
+    // console.log("props worked");
     setShowMakeEventModal(true);
     getLoc();
   }
@@ -53,14 +53,14 @@ export default function App() {
   }
 
   async function onFormSubmitted() { //when press button, make new event.
-    console.log(newTitle);
-    console.log(Date.now());
-    console.log(newLocation);
-    console.log(newAddress);
-    console.log(newDescription);
-    console.log(newAllergens);
+    // console.log(newTitle);
+    // console.log(Date.now());
+    // console.log(newLocation);
+    // console.log(newAddress);
+    // console.log(newDescription);
+    // console.log(newAllergens);
     try {
-      let e = new Event(newTitle, Date.now(), newLocation, newAddress, newDescription, newAllergens);
+      let e = new Event(null, newTitle, Date.now(), newLocation, newAddress, newDescription, newAllergens);
       console.log(e);
       await EventService.createEvent(e);
       setLatch(!setLatch);

@@ -1,6 +1,6 @@
 export class Event {
 
-    constructor(title, time, location, address, description, allergies) {
+    constructor(id, title, time, location, address, description, allergies) {
 
         this.id = null; // this is the userId
         this.title = title;
@@ -24,9 +24,9 @@ export class Event {
 
     static fromFirebase(docSnap) {
         const data = docSnap.data();
-        console.log(docSnap);
-        console.log(data);
-        console.log(docSnap.id);
+        // console.log(docSnap);
+        // console.log(data);
+        // console.log(docSnap.id);
         const ret = new Event(
              docSnap.id,
              data.Title,
@@ -36,7 +36,7 @@ export class Event {
              data.Description,
              data.Allergies
         );
-        console.log(ret);
+        // console.log(ret);
         return ret;
     }
 }
