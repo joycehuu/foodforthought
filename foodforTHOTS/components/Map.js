@@ -73,7 +73,7 @@ export default function Map(props) {
   function onMarkerPress(e) {
     setCurTitle(e.title);
     setCurLocation(e.location);
-    setCurTime(moment(e.time).format("dddd"));
+    setCurTime(moment(e.time).format("MMMM Do YYYY, h:mm:ss a"));
     setCurAddr(e.address);
     setCurDesc(e.description);
     setCurAll(e.allergies);
